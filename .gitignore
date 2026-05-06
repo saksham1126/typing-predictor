@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# Project Specific Data
+data/
+output/
+
+# Note: models/best_model.pkl is REQUIRED for the Streamlit app to run.
+# Do NOT ignore the models directory.
