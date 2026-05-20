@@ -3,6 +3,21 @@ import pandas as pd
 import joblib
 import os
 import time
+import random
+
+TYPING_TEXTS = [
+    "Machine learning is a subset of artificial intelligence that focuses on building systems that learn from data. By training algorithms on large datasets, these models can identify patterns, make decisions, and improve their performance over time without being explicitly programmed.",
+    "Python is an interpreted, high-level, general-purpose programming language. Its design philosophy emphasizes code readability with its use of significant indentation. Its language constructs as well as its object-oriented approach aim to help programmers write clear, logical code.",
+    "The quick brown fox jumps over the lazy dog. This classic English pangram contains every letter of the alphabet at least once. It has been used for over a century to test typewriters, practice keyboarding skills, and showcase computer fonts.",
+    "Web development is the work involved in developing a website for the Internet or an Intranet. Web development can range from developing a simple single static page of plain text to complex web applications, electronic businesses, and social network services.",
+    "Regular exercise offers a wide range of benefits for both physical and mental health. It strengthens the cardiovascular system, improves muscular strength, boosts energy levels, and reduces stress by releasing endorphins, the body's natural mood elevators.",
+    "Deep in the forest, a quiet stream flows over smooth, mossy stones. The gentle rustle of leaves in the wind combines with the soft babbling of the water to create a peaceful atmosphere, far removed from the hustle and bustle of city life.",
+    "A database is an organized collection of structured information, or data, typically stored electronically in a computer system. A database is usually controlled by a database management system, which allows users to query and organize data.",
+    "The history of space exploration is filled with remarkable achievements, from the launch of the first artificial satellite to humans walking on the moon. Today, robotic rovers explore the surface of Mars, sending back valuable data about the red planet.",
+    "Quantum computing is a rapidly-emerging technology that harnesses the laws of quantum mechanics to solve problems too complex for classical computers. These machines use qubits to run multidimensional quantum algorithms.",
+    "Good communication is the foundation of any successful relationship, whether personal or professional. It involves not only expressing your thoughts clearly but also listening actively to others and understanding their perspectives."
+]
+
 
 # Set page config
 st.set_page_config(
@@ -66,7 +81,10 @@ tab1, tab2 = st.tabs(["🚀 Live Typing Test", "🎛️ Manual Input"])
 with tab1:
     st.header("📝 Take a Typing Test")
     
-    reference_text = "Machine learning is a subset of artificial intelligence that focuses on building systems that learn from data. By training algorithms on large datasets, these models can identify patterns, make decisions, and improve their performance over time without being explicitly programmed."
+    if 'reference_text' not in st.session_state:
+        st.session_state.reference_text = random.choice(TYPING_TEXTS)
+        
+    reference_text = st.session_state.reference_text
     
     st.markdown('<div class="ref-text">' + reference_text + '</div>', unsafe_allow_html=True)
     
@@ -75,7 +93,7 @@ with tab1:
     if 'test_active' not in st.session_state:
         st.session_state.test_active = False
 
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     with col1:
         if st.button("Start Test"):
             st.session_state.start_time = time.time()
@@ -83,6 +101,17 @@ with tab1:
             st.rerun()
             
     with col2:
+        if st.button("Next Text"):
+            current_text = st.session_state.reference_text
+            new_text = random.choice(TYPING_TEXTS)
+            while new_text == current_text and len(TYPING_TEXTS) > 1:
+                new_text = random.choice(TYPING_TEXTS)
+            st.session_state.reference_text = new_text
+            st.session_state.start_time = None
+            st.session_state.test_active = False
+            st.rerun()
+            
+    with col3:
         if st.button("Reset"):
             st.session_state.start_time = None
             st.session_state.test_active = False
@@ -191,5 +220,5 @@ with tab2:
             else:
                 st.error("Needs Improvement. High error rates or low accuracy significantly bring down your true typing efficiency.")
 
-st.markdown("---")
-st.markdown("*Built with ❤️ using Streamlit & Scikit-Learn*")
+
+
